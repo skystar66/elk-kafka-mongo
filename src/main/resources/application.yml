@@ -1,0 +1,53 @@
+server:
+  port: 8087
+spring:
+  application:
+    name: elk-kafka-service
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/admin
+kafka:
+  producer:
+    servers: 127.0.0.1:9092
+    retries: 0
+    linger: 1
+    buffer:
+      memory: 40960
+    batch:
+      size: 4096
+  consumer:
+    zookeeper:
+      connect: 127.0.0.1:2181
+    servers: 127.0.0.1:9092
+    enable:
+      auto:
+        commit: false
+    session:
+      timeout: 10000
+    group:
+      id: test-3
+    auto:
+      commit:
+        interval: 1000
+      #保证每个组一个消费者消费同一条消息,若设置为earliest，那么会从头开始读partition(none)
+      #earliest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费,新建一个消费者组时会从头消费
+      #latest 当分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，消费新产生的该分区下的数据.新建消费者组时，只消费新建时候开始产生的消息
+      offset:
+        reset: earliest
+    concurrency: 10
+
+banner:
+#charset: utf-8
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${defaultZone:http://localhost:8000/eureka/}
+  instance:
+    prefer-ip-address: true
+logging:
+  config: classpath:logback.xml
+  level:
+    com:
+      tengyue:
+        service:
+          ResumClient: DEBUG
