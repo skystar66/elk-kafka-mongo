@@ -3,6 +3,7 @@ package com.xcar360.kafka.config;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xcar360.kafka.model.MessageTemplate;
+import com.xcar360.util.KafkaConstants;
 import com.xcar360.util.SpringUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class Listener {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @KafkaListener(topics = {"testlog"})
+    @KafkaListener(id = "demo",topics = {KafkaConstants.KAFKA_TEST1_TOPIC})
     public void listen(ConsumerRecord<?, ?> record) {
 
         logger.info("Listener  kafka的key: " + record.key());

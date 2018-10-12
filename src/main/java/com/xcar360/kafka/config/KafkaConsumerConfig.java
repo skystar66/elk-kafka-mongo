@@ -65,12 +65,23 @@ public class KafkaConsumerConfig {
 
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> propsMap = new HashMap<>();
+        //连接地址
         propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
+        //是否自动提交
         propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
+        //自动提交的频率
         propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);
+        //Session超时设置
         propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
+
+        //一次拉取消息数量 5个
+        propsMap.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
+
+        //键的反序列化方式
         propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        //值的反序列化方式
         propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        //GroupID
         propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         return propsMap;

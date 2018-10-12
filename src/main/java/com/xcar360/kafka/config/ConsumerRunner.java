@@ -57,7 +57,7 @@ public class ConsumerRunner implements CommandLineRunner {
 
 
     private  Map<String, Object> consumerProps() {
-        Map<String, Object> props = new HashMap<>();
+        Map<String, Object> props = new HashMap<String, Object>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);

@@ -1,7 +1,9 @@
 package com.xcar360.action;
 
 import com.alibaba.fastjson.JSON;
+import com.xcar360.kafka.config.KafkaSendResultHandler;
 import com.xcar360.kafka.model.MessageTemplate;
+import com.xcar360.util.KafkaConstants;
 import com.xcar360.util.ReturnCode;
 import com.xcar360.web.auth.AbstractRequest;
 import com.xcar360.web.response.ResponseResult;
@@ -28,6 +30,9 @@ public class Request1001Handler extends AbstractRequestHandler {
 
     @Autowired
     KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    KafkaSendResultHandler kafkaSendResultHandler;
 
     @Override
     protected boolean checkParams(Map<String, Serializable> params) {
@@ -56,13 +61,17 @@ public class Request1001Handler extends AbstractRequestHandler {
         messageTemplate.setMessageId(UUID.randomUUID().toString().replace("-",""));
         messageTemplate.setMessageInfo("测试服务");
 //        messageTemplate.setMessageQueueName("testlog");
-        messageTemplate.setTopic("testlog");
+        messageTemplate.setTopic(KafkaConstants.KAFKA_TEST1_TOPIC);
         messageTemplate.setMmessgeType("1");
         messageTemplate.setSendTime(new Date());
 
         String dataStr = JSON.toJSONString(messageTemplate);
-        kafkaTemplate.send("testlog",dataStr);
-
+        //使用监听 回调
+        kafkaTemplate.setProducerListener(kafkaSendResultHandler);
+        //kafka异步发送消息
+        kafkaTemplate.send(KafkaConstants.KAFKA_TEST1_TOPIC,dataStr);
+        //kafka同步发送消息
+//        kafkaTemplate.send(KafkaConstants.KAFKA_TEST1_TOPIC,dataStr).get();
 
         ResponseResult responseResult = new ResponseResult();
         responseResult.setCode(ReturnCode.ACTIVE_SUCCESS.code());
@@ -78,7 +87,7 @@ public class Request1001Handler extends AbstractRequestHandler {
      * @return
      */
     private Map<String, Object> getCommonParams(AbstractRequest request) {
-        Map<String, Object> commonParams = new HashMap<>();
+        Map<String, Object> commonParams = new HashMap<String, Object>();
 //        commonParams.put("frontId", StringUtil.getStringOfObject(request.getParam("frontId")));
         return commonParams;
     }
