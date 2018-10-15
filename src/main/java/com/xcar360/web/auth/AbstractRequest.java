@@ -1,15 +1,21 @@
 package com.xcar360.web.auth;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mysql.jdbc.log.LogUtils;
+import com.xcar360.enums.JSON_TYPE;
 import com.xcar360.util.UniformInterfaceUtils;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.util.TextUtils;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 /**
  * @author xulaing
@@ -64,7 +70,7 @@ public abstract class AbstractRequest implements Serializable {
 
     private String apiVersion;
 
-    private Map<String, Serializable> params = new HashMap<String, Serializable>();
+    private JSONObject params = new JSONObject();
 
     public AbstractRequest( String apiId, long timestamp
                           ) {
@@ -94,19 +100,19 @@ public abstract class AbstractRequest implements Serializable {
     /**
      * @return the params
      */
-    public Map<String, Serializable> getParams() {
-        Map<String, Serializable> tempParams = new HashMap<String, Serializable>(params.size());
-        tempParams.putAll(params);
-        return tempParams;
+    public Object getParams() {
+//        Map<String, Serializable> tempParams = new HashMap<String, Serializable>(params.size());
+//        tempParams.putAll(params);
+        return params.get("entity");
     }
 
     /**
      * @param params the params to set
      */
-    public void setParams(Map<String, Serializable> params) {
+    public void setParams(Object params) {
         this.params.clear();
         if (params != null) {
-            this.params.putAll(params);
+            this.params.put("entity",params);
         }
     }
 
@@ -134,7 +140,7 @@ public abstract class AbstractRequest implements Serializable {
         params.remove(name);
     }
 
-    public Serializable getParam(String name) {
+    public Object getParam(String name) {
         return params.get(name);
     }
 
@@ -210,6 +216,41 @@ public abstract class AbstractRequest implements Serializable {
             addParam(paramName, param == null ? null : param.trim());
         }
     }
+
+
+    /***
+     *
+     * 获取JSON类型
+     *         判断规则
+     *             判断第一个字母是否为{或[ 如果都不是则不是一个JSON格式的文本
+     *
+     * @param paramsStr
+     * @return
+     */
+    public  JSON_TYPE getJSONType(String paramsStr){
+        if(StringUtils.isEmpty(paramsStr)){
+            return JSON_TYPE.JSON_TYPE_ERROR;
+        }
+        final char[] strChar = paramsStr.substring(0, 1).toCharArray();
+        final char firstChar = strChar[0];
+
+        if(firstChar == '{'){
+            JSONObject jsonObject = JSON.parseObject(paramsStr);
+//        Map<String,Serializable> map = JSONObject.parseObject(paramsStr, HashMap.class);
+            setParams(jsonObject);
+            return JSON_TYPE.JSON_TYPE_OBJECT;
+        }else if(firstChar == '['){
+            JSONArray jsonArray = JSON.parseArray(paramsStr);
+//        Map<String,Serializable> map = JSONObject.parseObject(paramsStr, HashMap.class);
+            setParams(jsonArray);
+            return JSON_TYPE.JSON_TYPE_ARRAY;
+        }else{
+            return JSON_TYPE.JSON_TYPE_ERROR;
+        }
+    }
+
+
+
 
 //    /**
 //     * 验证签名合法性

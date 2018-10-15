@@ -1,17 +1,13 @@
 package com.xcar360.kafka.config;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.xcar360.kafka.model.MessageTemplate;
+import com.xcar360.mongo.MessageTemplate;
 import com.xcar360.util.KafkaConstants;
-import com.xcar360.util.SpringUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import java.util.Date;

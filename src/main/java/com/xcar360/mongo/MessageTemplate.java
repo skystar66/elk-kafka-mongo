@@ -1,4 +1,4 @@
-package com.xcar360.kafka.model;
+package com.xcar360.mongo;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

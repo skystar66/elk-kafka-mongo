@@ -1,5 +1,6 @@
 package com.xcar360.action;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xcar360.util.ReturnCode;
 import com.xcar360.util.SpringUtil;
 import com.xcar360.web.auth.AbstractRequest;
@@ -102,7 +103,7 @@ public abstract class AbstractRequestHandler {
      * 是否远程调用
      * @return 合法返回true，否则返回false
      */
-    protected boolean isRpc(Map<String, Serializable> params){
+    protected boolean isRpc(Object params){
         return true;
     }
     /**
@@ -117,7 +118,7 @@ public abstract class AbstractRequestHandler {
      * @param params 请求中携带的业务参数
      * @return 合法返回true，否则返回false
      */
-    protected abstract boolean checkParams(Map<String, Serializable> params);
+    protected abstract boolean checkParams(Object params);
     /**
      * 业务处理，交由子类实现。
      * @param request 请求实体

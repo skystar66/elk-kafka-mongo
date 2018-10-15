@@ -11,8 +11,8 @@ import java.util.Map;
  * @author xulaing
  * @date 2018年10月11日 14:44:55
  */
-public class Request1001 extends AbstractRequest {
-    public Request1001( String apiId, long timestamp) {
+public class Request1002 extends AbstractRequest {
+    public Request1002(String apiId, long timestamp) {
         super(apiId, timestamp);
     }
 
@@ -22,6 +22,10 @@ public class Request1001 extends AbstractRequest {
         if(paramsStr==null){
             return ;
         }
+
         getJSONType(paramsStr);
     }
+
+
+
 }

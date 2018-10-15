@@ -6,6 +6,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://127.0.0.1:27017/admin
+  elasticsearch:
+    jest:
+      read-timeout: 5000
+      uris: ["http://127.0.0.1:9200"]
 kafka:
   producer:
     servers: 127.0.0.1:9092
