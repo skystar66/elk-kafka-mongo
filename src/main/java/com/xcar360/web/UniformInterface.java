@@ -39,7 +39,7 @@ public class UniformInterface {
         AbstractRequest bizReq = null;
         ResponseResult bizResp = null;
         try {
-            logger.info("uniform","接收到来自[host:{}({}:{})]的请求",
+            logger.info("uniform","1接收到来自[host:{}({}:{})]的请求",
                     new Object[] { request.getRemoteHost(), request.getRemoteAddr(),
                             request.getRemotePort() });
             bizReq = AbstractRequest.fromHttpRequest(params);
