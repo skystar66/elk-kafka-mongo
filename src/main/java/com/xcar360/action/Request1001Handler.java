@@ -50,7 +50,7 @@ public class Request1001Handler extends AbstractRequestHandler {
 
 
     /**
-     * 版本10  生产消息 简单----
+     * 版本10  生产消息 简单----1
      *
      * @param request
      * @return
