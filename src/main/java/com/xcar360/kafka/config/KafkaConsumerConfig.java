@@ -1,5 +1,6 @@
 package com.xcar360.kafka.config;
 
+import com.xcar360.util.SpringUtil;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
@@ -10,7 +11,9 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -46,6 +49,11 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.concurrency}")
     private int concurrency;
 
+    /*
+    *
+    *
+    * 配置监听类
+    * */
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
@@ -53,15 +61,27 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(concurrency);
         factory.getContainerProperties().setPollTimeout(1500);
-        factory.getContainerProperties().setMessageListener(new KafkaMessageListener());
+        factory.getContainerProperties().setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);//设置offest偏移量提交方式
+//        factory.getContainerProperties().setGenericErrorHandler(SpringUtil.getBean(KafkaGenericErrorHandler.class));//设置消费者监听
+//        factory.getContainerProperties().setMessageListener(new KafkaMessageListener());
+        logger.info("消费者配置完成-=======================================================================================");
         return factory;
     }
 
+    /*
+    *
+    * 配置消费者工厂
+    * */
 
     public ConsumerFactory<String, String> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 
+
+    /*
+    *
+    * 消费者配置项
+    * */
 
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> propsMap = new HashMap<>();
@@ -75,7 +95,7 @@ public class KafkaConsumerConfig {
         propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
 
         //一次拉取消息数量 5个
-        propsMap.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
+        propsMap.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100");
 
         //键的反序列化方式
         propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -86,6 +106,11 @@ public class KafkaConsumerConfig {
         propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         return propsMap;
     }
+
+    /*
+    *
+    * 配置监听
+    * */
 
     @Bean
     public Listener listener() {

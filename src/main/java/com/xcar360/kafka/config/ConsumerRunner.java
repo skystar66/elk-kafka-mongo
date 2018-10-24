@@ -1,5 +1,6 @@
 package com.xcar360.kafka.config;
 
+import com.xcar360.util.KafkaConstants;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @author xulaing
  * @date 2018年10月11日 14:44:55
  */
-
+//@Component
 public class ConsumerRunner implements CommandLineRunner {
 
     @Value("${kafka.consumer.servers}")
@@ -38,7 +39,7 @@ public class ConsumerRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("初始化消费者容器。。。。");
-        ContainerProperties containerProps = new ContainerProperties("testlog");
+        ContainerProperties containerProps = new ContainerProperties("kafkatest", KafkaConstants.KAFKA_TEST1_TOPIC_MESSAGE);
         containerProps.setMessageListener(new KafkaMessageListener());
         containerProps.setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);//不设置这个提交offset会报空指针错误
         KafkaMessageListenerContainer<Integer, String> container = createContainer(containerProps);
@@ -64,7 +65,9 @@ public class ConsumerRunner implements CommandLineRunner {
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
+        //键的反序列化方式
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        //值的反序列化方式
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return props;
     }

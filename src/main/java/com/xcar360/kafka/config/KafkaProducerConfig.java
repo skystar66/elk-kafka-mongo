@@ -57,6 +57,9 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.LINGER_MS_CONFIG, linger);
         //生产者可以使用的总内存字节来缓冲等待发送到服务器的记录
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, bufferMemory);
+        //设置自定义的分区数
+        props.put("partitioner.class","com.xcar360.kafka.config.CidPartitioner");
+
         //键的序列化方式
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         //值的序列化方式

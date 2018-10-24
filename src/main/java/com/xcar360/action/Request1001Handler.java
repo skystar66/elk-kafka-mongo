@@ -8,13 +8,14 @@ import com.xcar360.util.KafkaConstants;
 import com.xcar360.util.ReturnCode;
 import com.xcar360.web.auth.AbstractRequest;
 import com.xcar360.web.response.ResponseResult;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,15 +62,23 @@ public class Request1001Handler extends AbstractRequestHandler {
         messageTemplate.setMessageId(UUID.randomUUID().toString().replace("-",""));
         messageTemplate.setMessageInfo("测试服务");
 //        messageTemplate.setMessageQueueName("testlog");
-        messageTemplate.setTopic(KafkaConstants.KAFKA_TEST1_TOPIC);
+        messageTemplate.setTopic(KafkaConstants.KAFKA_TEST1_TOPIC_MESSAGE);
         messageTemplate.setMmessgeType("1");
         messageTemplate.setSendTime(new Date());
 
         String dataStr = JSON.toJSONString(messageTemplate);
+
+        //获取key_cid_str
+        String key_cid_str = dataStr.substring(dataStr.indexOf(":")+1, dataStr.indexOf(","));
+
         //使用监听 回调
         kafkaTemplate.setProducerListener(kafkaSendResultHandler);
+
         //kafka异步发送消息
-        kafkaTemplate.send(KafkaConstants.KAFKA_TEST1_TOPIC,dataStr);
+        kafkaTemplate.send(KafkaConstants.KAFKA_TEST1_TOPIC_MESSAGE, key_cid_str, dataStr);
+
+
+//        kafkaTemplate.send("kafkatest",dataStr);
         //kafka同步发送消息
 //        kafkaTemplate.send(KafkaConstants.KAFKA_TEST1_TOPIC,dataStr).get();
 

@@ -9,10 +9,10 @@ public class KafkaConstants {
 
 
     //================================topic管理========================================
-    public static final String KAFKA_TEST1_TOPIC="KAFKA_TEST1_TOPIC";
+    public static final String KAFKA_TEST1_TOPIC_THREE="KAFKA_TEST1_TOPIC_THREE";
 
 
 
-
+    public static final String KAFKA_TEST1_TOPIC_MESSAGE="KAFKA_TEST1_TOPIC_MESSAGE";
 
 }

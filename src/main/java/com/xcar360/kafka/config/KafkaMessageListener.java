@@ -26,7 +26,6 @@ public class KafkaMessageListener implements AcknowledgingMessageListener<Intege
 
     private MongoTemplate mongoTemplate = (MongoTemplate) SpringUtil.getBean("mongoTemplate");
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Override
     public void onMessage(ConsumerRecord<Integer, String> record, Acknowledgment acknowledgment) {

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 
 import java.util.Date;
 
@@ -24,8 +25,8 @@ public class Listener {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @KafkaListener(id = "demo",topics = {KafkaConstants.KAFKA_TEST1_TOPIC})
-    public void listen(ConsumerRecord<?, ?> record) {
+    @KafkaListener(id = "demo",topics = {KafkaConstants.KAFKA_TEST1_TOPIC_MESSAGE},containerFactory = "kafkaListenerContainerFactory")
+    public void listen(ConsumerRecord<?, ?> record,Acknowledgment ack) {
 
         logger.info("Listener  kafka的key: " + record.key());
         logger.info("Listener  kafka的offset: " + record.offset());
@@ -40,6 +41,9 @@ public class Listener {
 
         //记录日志
         saveConsumeredMessageLog(messageTemplate);
+
+
+        ack.acknowledge();
 
 //        //EditVo editVo = JSON.toJavaObject((JSON) JSON.parse(record.value().toString()), EditVo.class);
 //        //System.out.println("editVo type111:" + editVo.getType());

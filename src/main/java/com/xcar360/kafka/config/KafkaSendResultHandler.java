@@ -13,7 +13,7 @@ import org.springframework.util.concurrent.SuccessCallback;
 /**
  * @author xulaing
  * @date 2018年10月11日 14:44:55
- * @desc     消息回调(ListenableFutureCallback,ProducerListener)
+ * @desc     消息发送回调(ListenableFutureCallback,ProducerListener)
  */
 @Component
 public class KafkaSendResultHandler implements ProducerListener {
